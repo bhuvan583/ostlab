@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# Function to calculate the day of the week for a given date
+# Sunday = 1, Monday = 2, ..., Saturday = 7
+day_of_week() {
+    date -d "$1" +%u
+}
+
+# Read the limit from the user
+read -p "Enter the number of odd years to display: " limit
+
+# Initialize the counter
+count=0
+
+# Define the odd months (January=01, March=03, ..., November=11)
+odd_months=("01" "03" "05" "07" "09" "11")
+
+# Files to store the dates
+odd_days_file="odd_days.txt"
+even_days_file="even_days.txt"
+
+# Clear the files before starting
+> "$odd_days_file"
+> "$even_days_file"
+
+# Loop through the years from 2025 onwards (odd years)
+for year in $(seq 2025 2 2101); do
+    # Exit the loop if the count reaches the user-defined limit
+    if (( count >= limit )); then
+        break
+    fi
+    
+    # Calculate the current month index in a cyclic manner
+    month_index=$((count % ${#odd_months[@]}))
+    month=${odd_months[$month_index]}
+
+    day=$(day_of_week "$year-$month-08")
+    echo "Year: $year, Month: $month"
+    echo "8th of $month/$year is a day $day"
+    
+    # Store the date in the appropriate file based on odd/even day of the week
+    if (( day % 2 == 1 )); then
+        echo "$year-$month-08" >> "$odd_days_file"
+    else
+        echo "$year-$month-08" >> "$even_days_file"
+    fi
+    
+    echo ""
+    
+    # Increment the counter
+    ((count++))
+done
+
+echo "Dates saved in $odd_days_file and $even_days_file."

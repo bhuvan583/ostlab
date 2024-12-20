@@ -1,0 +1,96 @@
+#!/bin/bash
+
+# Function to generate Fibonacci series
+fibonacci() {
+    echo "Enter the number of terms for Fibonacci series:"
+    read n
+    a=0
+    b=1
+
+    echo "Fibonacci series:"
+    for (( i=0; i<n; i++ ))
+    do
+        echo -n "$a "
+        fn=$((a + b))
+        a=$b
+        b=$fn
+    done
+    echo
+}
+
+# Function to check if a number is odd or even
+odd_or_even() {
+    echo "Enter a number to check if it's odd or even:"
+    read num
+    if [ $((num % 2)) -eq 0 ]; then
+        echo "$num is even."
+    else
+        echo "$num is odd."
+    fi
+}
+
+# Function to calculate factorial
+factorial() {
+    echo "Enter a number to calculate its factorial:"
+    read num
+    fact=1
+    for (( i=2; i<=num; i++ ))
+    do
+        fact=$((fact * i))
+    done
+    echo "Factorial of $num is $fact."
+}
+
+# Function to check if a number is prime
+is_prime() {
+    echo "Enter a number to check if it's prime:"
+    read num
+    if [ "$num" -le 1 ]; then
+        echo "$num is not a prime number."
+        return
+    fi
+
+    for (( i=2; i*i<=num; i++ ))
+    do
+        if [ $((num % i)) -eq 0 ]; then
+            echo "$num is not a prime number."
+            return
+        fi
+    done
+
+    echo "$num is a prime number."
+}
+
+# Function to find the k-th largest number in a list
+kth_largest() {
+    echo "Enter numbers separated by space:"
+    read -a arr
+    echo "Enter the value of k (for k-th largest):"
+    read k
+
+    sorted_arr=($(for i in "${arr[@]}"; do echo $i; done | sort -nr))
+
+    echo "The $k-th largest number is ${sorted_arr[$((k-1))]}."
+}
+
+# Main Menu
+while true; do
+    echo "Choose an option:"
+    echo "1. Fibonacci series"
+    echo "2. Odd or Even"
+    echo "3. Factorial"
+    echo "4. Prime or Not"
+    echo "5. K-th Largest Number"
+    echo "6. Exit"
+    read choice
+
+    case $choice in
+        1) fibonacci ;;
+        2) odd_or_even ;;
+        3) factorial ;;
+        4) is_prime ;;
+        5) kth_largest ;;
+        6) exit ;;
+        *) echo "Invalid option. Please choose a valid number." ;;
+    esac
+done
